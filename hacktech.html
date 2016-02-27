@@ -3,14 +3,14 @@
 </head>
 
 <body>
- 
+
   <h1>Welcome to Statme!</h1>
  		<form class="player-search">
           <input type="text" name="text" placeholder="Search for a player" />
         </form>
         {{ > jsonStuff }}
         {{ > apiCallTest}}
-  
+
 </body>
 
 <template name="jsonStuff">
@@ -20,10 +20,6 @@
 </template>
 
 <template name = "apiCallTest">
-	<p> {{apiCallHelper}} </p>
-	{{#if apiCallHelper }}
-		<p>"true"</p>
-	{{else}}
-		<p>"false"</p>
-	{{/if}}
+poop
+	<p> {{ gameLog.plus_minus }} </p>
 </template>

@@ -1,6 +1,15 @@
-
+var BASE_URL = "https://www.stattleship.com/";
 
 if (Meteor.isClient) {
+  var data;
+  Meteor.call('getFromAPI', "nba-dwyane-wade", function(error, result) {
+    if (error) {
+      console.log(error.reason);
+      return;
+    }
+    var gameLog = result.data.game_logs[0];
+    Session.set("data", gameLog);
+  });
   // jsonStuff is a session variable to test if we can set and get session data from the server to the client
   Session.set("jsonStuff", "this is some stuff");
   Session.set("isApiCallWorking", false);
@@ -11,21 +20,8 @@ if (Meteor.isClient) {
     }
   });
   Template.apiCallTest.helpers ({
-    apiCallHelper : function() {
-      Meteor.call('getFromAPI', function(error, result) {
-        if (error) {
-          console.log(error.reason);
-          return;
-        }
-        else if (result == false){
-          return Session.get("isApiCallWorking");
-        }
-        else {
-          Session.set("isApiCallWorking", true);
-          console.log(Session.get("isApiCallWorking"));
-          return Session.get("isApiCallWorking");
-        }
-      });
+    gameLog : function() {
+      return Session.get("data");
     }
   })
 }
@@ -34,25 +30,28 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
     // set up search bar
-
-      ACCESS_TOKEN = JSON.parse(Assets.getText('api.json')).access_token;
-      console.log(ACCESS_TOKEN);
+      var ACCESS_TOKEN = JSON.parse(Assets.getText('api.json')).access_token;
+      HEADERS = {
+        "Content-Type": "application/json",
+        "Accept": "application/vnd.stattleship.com; version=1",
+        "Authorization": "Token token=" + ACCESS_TOKEN
+      };
   });
   Meteor.methods ({
-    'getFromAPI' : function (){
-      // api.access_token is YOUR access token for the stattleship api
-      //
-      HEADERS = {"Content-Type": "application/json", 
-      "Accept": "application/vnd.stattleship.com; version=1",
-      "Authorization": "Token token=" + ACCESS_TOKEN};
+    'getFromAPI' : function (playerId) {
+      var sport = "basketball";
+      var league = "nba";
+      var action = "game_logs";
+      var url = BASE_URL + "/" + sport + "/" + league + "/" + action;
       this.unblock();
       try {
-        var result = HTTP.call("GET", "https://www.stattleship.com/basketball/nba/game_logs?player_id=nba-stephen-curry", 
-          {headers: HEADERS});
-        return true;
+        var result = HTTP.call("GET",
+                               url + "?status=in_progress&player_id=" + playerId,
+                               {headers: HEADERS});
+        return result;
       } catch (e) {
         console.log(e);
-        return false;
+        return null;
       }
     }
 
