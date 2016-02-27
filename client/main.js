@@ -1,11 +1,14 @@
 var data;
+var dataDep = new Tracker.Dependency();
+
 Meteor.call('getFromAPI', "nba-dwyane-wade", function(error, result) {
   if (error) {
     console.log(error.reason);
     return;
   }
   var gameLog = result.data.game_logs[0];
-  Session.set("data", gameLog);
+  data = gameLog;
+  dataDep.changed();
 });
 
 // jsonStuff is a session variable to test if we can set and get session data from the server to the client
@@ -18,8 +21,9 @@ Template.jsonStuff.helpers ({
   }
 });
 
-Template.apiCallTest.helpers ({
-  gameLog : function() {
-    return Session.get("data");
+Template.apiCallTest.helpers({
+  gameLog: function() {
+    dataDep.depend();
+    return data;
   }
 });
