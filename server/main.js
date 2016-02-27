@@ -12,7 +12,7 @@ Meteor.startup(function () {
 });
 
 Meteor.methods ({
-  'getFromAPI' : function (playerId) {
+  'getGameLog' : function (playerId) {
     var sport = "basketball";
     var league = "nba";
     var action = "game_logs";

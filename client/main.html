@@ -8,18 +8,20 @@
     <form class="player-search">
           <input type="text" name="text" placeholder="Search for a player" />
         </form>
-        {{ > jsonStuff }}
-        {{ > apiCallTest}}
+        {{ > plus_minus }}
+        {{ > points }}
+        {{ > assists }}
 
 </body>
 
-<template name="jsonStuff">
-  <p>
-    {{jsonStuffHelper}}
-  </p>
+<template name = "plus_minus">
+  <p> Plus Minus: {{ gameLog.plus_minus }} </p>
 </template>
 
-<template name = "apiCallTest">
-poop
-  <p> {{ gameLog.plus_minus }} </p>
+<template name = "points">
+  <p> Points: {{ gameLog.points }} </p>
+</template>
+
+<template name = "assists">
+  <p> Assists: {{ gameLog.assists }} </p>
 </template>

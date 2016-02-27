@@ -1,5 +1,5 @@
 var data;
-Meteor.call('getFromAPI', "nba-dwyane-wade", function(error, result) {
+Meteor.call('getGameLog', "nba-dwyane-wade", function(error, result) {
   if (error) {
     console.log(error.reason);
     return;
@@ -11,14 +11,7 @@ Meteor.call('getFromAPI', "nba-dwyane-wade", function(error, result) {
 // jsonStuff is a session variable to test if we can set and get session data from the server to the client
 Session.set("jsonStuff", "this is some stuff");
 
-// counter starts at 0
-Template.jsonStuff.helpers ({
-  jsonStuffHelper : function(){
-    return Session.get("jsonStuff");
-  }
-});
-
-Template.apiCallTest.helpers ({
+Template.plus_minus.helpers ({
   gameLog : function() {
     return Session.get("data");
   }
