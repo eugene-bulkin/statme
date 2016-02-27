@@ -8,20 +8,11 @@
     <form class="player-search">
           <input type="text" name="text" placeholder="Search for a player" />
         </form>
-        {{ > plus_minus }}
-        {{ > points }}
-        {{ > assists }}
-
+        {{ > stats }}
 </body>
 
-<template name = "plus_minus">
+<template name = "stats">
   <p> Plus Minus: {{ gameLog.plus_minus }} </p>
-</template>
-
-<template name = "points">
   <p> Points: {{ gameLog.points }} </p>
-</template>
-
-<template name = "assists">
   <p> Assists: {{ gameLog.assists }} </p>
 </template>
