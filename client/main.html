@@ -7,8 +7,10 @@
   <h1>Welcome to Statme!</h1>
     <form class="player-search">
           <input type="text" name="text" placeholder="Search for a player" />
-        </form>
-        {{ > stats }}
+    </form>
+    {{#each watched}}
+      {{ > stats }}
+    {{/each}}
 </body>
 
 <template name = "stats">

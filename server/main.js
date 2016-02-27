@@ -3,12 +3,19 @@ var BASE_URL = "https://www.stattleship.com/";
 Meteor.startup(function () {
   // code to run on server at startup
   // set up search bar
+    if (Watched.find().count() === 0) {
+      Watched.insert({name: "nba-dwayne-wade", isPlayer : true, isGame : false});
+    }
     var ACCESS_TOKEN = JSON.parse(Assets.getText('api.json')).access_token;
     HEADERS = {
       "Content-Type": "application/json",
       "Accept": "application/vnd.stattleship.com; version=1",
       "Authorization": "Token token=" + ACCESS_TOKEN
     };
+});
+
+Meteor.publish("watched", function () {
+  return Watched.find()
 });
 
 Meteor.methods ({

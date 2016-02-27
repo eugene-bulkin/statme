@@ -1,6 +1,8 @@
 var data;
 var dataDep = new Tracker.Dependency();
 
+Meteor.subscribe("watched");
+
 Meteor.call('getGameLog', "nba-dwyane-wade", function(error, result) {
   if (error) {
     console.log(error.reason);
@@ -17,3 +19,7 @@ Template.stats.helpers ({
     return data;
   }
 });
+
+
+
+
