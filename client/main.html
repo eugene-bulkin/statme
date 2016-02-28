@@ -3,7 +3,27 @@
 </head>
 
 <body>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">Logo</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li>  {{ > loginButtons }} </li>
+        <li><button data-target="modal1" class="btn modal-trigger">About</button></li>
+      </ul>
+    </div>
+  </nav> 
 
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>How To Use StatMe</h4>
+      <p>Search for a player or team whose game you want to follow. Select the correct ones
+        from our dropdown menu, and watch live stats from active games on your page below!</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+  </div>
   <h1>Welcome to Statme!</h1>
     <form class="player-search">
           <input type="text" name="text" placeholder="Search for a player" />
@@ -14,7 +34,19 @@
 </body>
 
 <template name = "stats">
-  <p> Plus Minus: {{ gameLog.plus_minus }} </p>
-  <p> Points: {{ gameLog.points }} </p>
-  <p> Assists: {{ gameLog.assists }} </p>
+  <div class="row">
+      <div class="col s12 m5">
+        <div class="card-panel teal">
+          <span class="white-text">
+              <p> Player Name: {{ this.player_id }} </p>
+              <p> Points: {{ gameLog.points }} </p>
+              <p> Assists: {{ gameLog.assists }} </p>
+              <p> Rebounds: {{ gameLog.rebounds }} </p>
+              <p> Steals: {{ gameLog.steals }} </p>
+              <p> Blocks: {{ gameLog.blocks }} </p>
+              <p> Plus Minus: {{ gameLog.plus_minus }} </p>
+          </span>
+        </div>
+      </div>
+    </div>
 </template>
