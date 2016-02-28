@@ -1,4 +1,8 @@
 /* CSS declarations go here */
+.nav-wrapper {
+  padding: 0 0.75rem;
+}
+
 .stats-card h3 {
   margin: 0;
 }
