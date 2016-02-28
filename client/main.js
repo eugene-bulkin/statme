@@ -10,6 +10,14 @@ var data;
 var dataDep = new Tracker.Dependency();
 Session.setDefault("watched", [{player_id: "148"}]);
 
+Template.search.helpers({
+  inputAttributes: function () {
+      return { 'class': 'easy-search-input', 'placeholder': 'sum fuck?.' };
+    },
+  playersIndex: () => PlayersIndex
+});
+
+
 Template.stats.helpers ({
   gameLog: function() {
     dataDep.depend();
@@ -30,7 +38,24 @@ Template.body.helpers ({
   watched: function() {
     return Session.get("watched");
   }
-})
+});
+
+  Template.player.helpers({
+    selected: function () {
+      return Session.equals("selectedPlayer", this.__originalId) ? "selected" : '';
+    }
+  });
+
+  Template.player.events({
+    'click': function () {
+      Session.set("selectedPlayer", this.__originalId);
+    }
+  });
+
+Tracker.autorun(function () {
+  let cursor = PlayersIndex.search("").fetch();
+  console.log(cursor);
+  });
 
 Accounts.ui.config({
   passwordSignupFields: "USERNAME_ONLY"

@@ -25,13 +25,27 @@
     </div>
   </div>
   <h1>Welcome to Statme!</h1>
-    <form class="player-search">
-          <input type="text" name="text" placeholder="Search for a player" />
-    </form>
+   {{ > search}}
     {{#each watched}}
       {{ > stats }}
     {{/each}}
+    
+    
 </body>
+<template name = "search">
+	{{> EasySearch.Input index=playersIndex attributes=InputAttributes}}
+  <ul>
+    {{#EasySearch.Each index=playersIndex}}
+      <li>Name of the player: {{name}} ({{score}})</li>
+    {{/EasySearch.Each}}
+  </ul>
+
+  {{> EasySearch.LoadMore index=playersIndex}}
+
+  {{#EasySearch.IfNoResults index=playersIndex}}
+    <div class="no-results">No results found!</div>
+  {{/EasySearch.IfNoResults}}
+</template>
 
 <template name = "stats">
   <div class="row">
