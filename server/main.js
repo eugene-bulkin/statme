@@ -66,7 +66,7 @@ Meteor.methods ({
       var mostRecent = JSON.parse(Assets.getText('data/' + gameId + '/' + prevTimes[prevTimes.length - 1] + '.json'));
       watchedGames[gameId].forEach(function(watcher) {
         var player = mostRecent.filter(function(playerLineScore) {
-          return playerLineScore.player.id === watcher.watching.player;
+          return playerLineScore.player.id === watcher.watching.player_id;
         })[0];
         if(player) {
           Streamy.emit("stats", player, watcher.socket);
@@ -129,11 +129,9 @@ Meteor.startup(function () {
         });
       }
     });
-
     Meteor.call("getPlayersList");
 
     console.log("Players loaded.");
-
     timer = Meteor.setInterval(function() {
       Meteor.call("update");
     }, 1000);

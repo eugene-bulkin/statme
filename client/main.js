@@ -6,7 +6,7 @@ Meteor._debug = (function (super_meteor_debug) {
   };
 })(Meteor._debug);
 
-var data;
+var data = {};
 var dataDep = new Tracker.Dependency();
 
 Session.setDefault("watched", []);
@@ -16,9 +16,8 @@ Meteor.subscribe("players");
 
 Template.search_bar_results.events ({
  	"change .player-select": function (event) {
-
       var toWatch = {player_id: this.player_id};
-      watched = Session.get("watched");
+      var watched = Session.get("watched");
       if(event.target.checked) {
         watched.push(toWatch);
         Streamy.emit("watch", toWatch);
@@ -33,7 +32,11 @@ Template.search_bar_results.events ({
 Template.search_bar_results.helpers ({
     list_of_players: function(){
     	return Players.find({});
-  	}
+  	},
+    is_watched: function() {
+      var watchedIds = Session.get("watched").map(function(w) { return w.player_id; });
+      return watchedIds.indexOf(this.player_id) > -1;
+    }
   });
 
 
@@ -44,9 +47,21 @@ Template.stats.helpers ({
     if(!data) {
       return null;
     }
-    if (data.player.id == this.player_id) {
-      return data;
+    return data[this.player_id];
+  },
+  logo: function(player) {
+    return player.teams[0].logos.small;
+  },
+  pcts: function() {
+    dataDep.depend();
+    if(!data) {
+      return null;
     }
+    return {
+      field_goals: (100 * (data.field_goals_made / data.field_goals_attempted)) | 0,
+      three_point_field_goals: (100 * (data.three_point_field_goals_made / data.three_point_field_goals_attempted)) | 0,
+      free_throws: (100 * (data.free_throws_made / data.free_throws_attempted)) | 0,
+    };
   }
 });
 
@@ -57,6 +72,7 @@ $(document).ready(function(){
 
 Template.body.helpers ({
   watched: function() {
+    dataDep.depend();
     return Session.get("watched");
   },
   playersList: function() {
@@ -71,12 +87,12 @@ Accounts.ui.config({
 Streamy.onConnect(function() {
   Session.get("watched").forEach(function(toWatch) {
     Streamy.emit("watch", {
-      player: toWatch.player_id
+      player_id: toWatch.player_id
     });
   });
 });
 
 Streamy.on("stats", function(d) {
-  data = d;
+  data[d.player.id] = d;
   dataDep.changed();
 });

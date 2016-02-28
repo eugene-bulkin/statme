@@ -3,43 +3,46 @@
 </head>
 
 <body>
-  <nav>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo">Logo</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li>  {{ > loginButtons }} </li>
-        <li><button data-target="modal1" class="btn modal-trigger">About</button></li>
-      </ul>
-    </div>
-  </nav>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Logo</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li>  {{ > loginButtons }} </li>
+          <li><button data-target="modal1" class="btn modal-trigger">About</button></li>
+        </ul>
+      </div>
+    </nav>
 
-  <!-- Modal Structure -->
-  <div id="modal1" class="modal">
-    <div class="modal-content">
-      <h4>How To Use StatMe</h4>
-      <p>Search for a player or team whose game you want to follow. Select the correct ones
-        from our dropdown menu, and watch live stats from active games on your page below!</p>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4>How To Use StatMe</h4>
+        <p>Search for a player or team whose game you want to follow. Select the correct ones
+          from our dropdown menu, and watch live stats from active games on your page below!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      </div>
     </div>
-    <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-    </div>
+
+    <div class="row">
+      <div class="col s3">
+        {{ > search_bar_results }}
+      </div>
+      <div class="col s9">
+        {{#each watched}}
+          {{ > stats }}
+        {{/each}}
+      </div>
   </div>
-  <h1>Welcome to Statme!</h1>
-  	{{ > search_bar_results }}
-    {{#each watched}}
-      {{ > stats }}
-    {{/each}}
-
-
-
 </body>
 
 <template name = "search_bar_results">
-	<div style="height:600px; width:200px; overflow-y:scroll;">
+	<div style="overflow-y: auto;">
 	<ul id="search_results">
 		{{#each list_of_players}}
 			<li>
-  			<input type="checkbox" class="filled-in player-select" id="search-{{@index}}">
+  			<input type="checkbox" class="filled-in player-select" id="search-{{@index}}" checked={{is_watched(this)}}>
   			<label for="search-{{@index}}">{{full_name}}</label>
 			</li>
 		{{/each}}
@@ -47,27 +50,66 @@
 	</div>
 </template>
 
-<template name = "stats">
-  <div class="row">
-      <div class="col s12 m5">
-        <div class="card-panel teal">
-          <div class = "left-align">
-            <img src="{{ gameLog.player.headshots.original }}" />
-          </div>
-          <div class = "right-align">
-            <span class="white-text right-align">
-              <p> Minutes: {{ gameLog.minutes }} </p>
-              <p> Points: {{ gameLog.points }} </p>
-              <p> Assists: {{ gameLog.assists }} </p>
-              <p> Rebounds: {{ gameLog.rebounds_total }} </p>
-              <p> Steals: {{ gameLog.steals }} </p>
-              <p> Blocks: {{ gameLog.blocked_shots }} </p>
-              <p> Plus Minus: {{ gameLog.plus_minus }} </p>
-              <small>Updated: {{ gameLog.updated_at }}</small>
-            </span>
-          </div>
+<template name="stats">
+  {{ #if gameLog.player }}
+  <div class="stats-card card-panel light-blue darken-1 white-text">
+    <div class="row">
+      <div class="col s11">
+        <h3>{{ gameLog.player.full_name }}</h3>
+      </div>
+      <div class="col s1">
+        <img class="team" src="{{ logo(gameLog.player) }}" />
+      </div>
+    </div>
+    <div class="row valign-wrapper">
+      <div class = "col s4 center-align">
+        <img src="{{ gameLog.player.headshots.w192xh192 }}" />
+      </div>
+      <div class = "col s8 left-align">
+        <div class="center-align">
+          <table class="stats-table">
+            <tr>
+              <th>MIN</th>
+              <th>PTS</th>
+              <th>AST</th>
+              <th>REB</th>
+              <th>STL</th>
+              <th>BLK</th>
+            </tr>
+            <tr>
+              <td>{{ gameLog.minutes }}</td>
+              <td>{{ gameLog.points }}</td>
+              <td>{{ gameLog.assists }}</td>
+              <td>{{ gameLog.rebounds_total }}</td>
+              <td>{{ gameLog.steals }}</td>
+              <td>{{ gameLog.blocked_shots }}</td>
+            </tr>
+            <tr>
+              <th>FG</th>
+              <th>FG%</th>
+              <th>3P</th>
+              <th>3P%</th>
+              <th>FT</th>
+              <th>FT%</th>
+            </tr>
+            <tr>
+              <td>{{ gameLog.field_goals_made }} / {{ gameLog.field_goals_attempted }}</td>
+              <td>{{ pcts.field_goals }}%</td>
+              <td>{{ gameLog.three_point_field_goals_made }} / {{ gameLog.three_point_field_goals_attempted }}</td>
+              <td>{{ pcts.three_point_field_goals }}%</td>
+              <td>{{ gameLog.free_throws_made }} / {{ gameLog.free_throws_attempted }}</td>
+              <td>{{ pcts.free_throws }}%</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="right-align">
+        <small>Updated: {{ gameLog.updated_at }}</small>
+      </div>
+    </div>
+  </div>
+  {{ /if }}
 </template>
 
