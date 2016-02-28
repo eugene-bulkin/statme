@@ -8,20 +8,22 @@ Meteor._debug = (function (super_meteor_debug) {
 
 var data;
 var dataDep = new Tracker.Dependency();
-Session.setDefault("watched", [{player_id: "148"}]);
+Session.setDefault("watched", [{player_id: 148}]);
+
+Meteor.subscribe("players");
 
 Template.search.helpers({
   inputAttributes: function () {
-      return { 'class': 'easy-search-input', 'placeholder': 'sum fuck?.' };
+      return { 'class': 'easy-search-input', 'placeholder': 'search for player' };
     },
-  playersIndex: () => PlayersIndex
+   playersIndex: () => PlayersIndex
 });
 
 
 Template.stats.helpers ({
   gameLog: function() {
     dataDep.depend();
-    // console.log(data.player.id);
+    //console.log(data);
     // console.log(this.player_id);
     if (data.player.id == this.player_id) {
       return data;
@@ -37,8 +39,12 @@ $(document).ready(function(){
 Template.body.helpers ({
   watched: function() {
     return Session.get("watched");
+  }, 
+  playersList: function() {
+    return Players.find({});
   }
 });
+
 
   Template.player.helpers({
     selected: function () {
@@ -57,6 +63,19 @@ Tracker.autorun(function () {
   console.log(cursor);
   });
 
+Template.body.events ({
+  'submit .search' : function(event) {
+      event.preventDefault();
+      playerID = event.target.value;
+      watch_array = Session.get("watched");
+      watch_array.push({player_id: playerID});
+      Session.set("watched", watch_array);
+      Streamy.emit("watch", {
+      player: playerID
+      });
+  } 
+});
+
 Accounts.ui.config({
   passwordSignupFields: "USERNAME_ONLY"
 });
@@ -68,9 +87,9 @@ Accounts.ui.config({
 
 
 Streamy.onConnect(function() {
-  Streamy.emit("watch", {
-    player: 148
-  });
+    Streamy.emit("watch", {
+      player: Session.get("watched")[0].player_id
+    });
 });
 
 Streamy.on("stats", function(d) {

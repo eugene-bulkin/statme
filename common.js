@@ -1,7 +1,8 @@
+
 Players = new Mongo.Collection('players'),
   PlayersIndex = new EasySearch.Index({
     collection: Players,
-    fields: ['fullname'],
+    fields: ['full_name'],
     engine: new EasySearch.Minimongo(),
     sort: function() {
     return {'score': -1};
@@ -17,19 +18,13 @@ Players = new Mongo.Collection('players'),
 
 
 
-Watched = new Mongo.Collection("watched");
-
-WatchedSchema = new SimpleSchema({
-  name: {
-    type: String,
-    label: "name"
-  },
-  isGame: {
-    type: Boolean
-  },
-  isPlayer: {
-    type: Boolean
-  }
+PlayersSchema = new SimpleSchema({
+	full_name: {
+		type: String
+	},
+	player_id: {
+		type: Number
+	}
 });
 
-Watched.attachSchema(WatchedSchema);
+Players.attachSchema(PlayersSchema);

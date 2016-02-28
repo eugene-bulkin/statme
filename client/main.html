@@ -36,11 +36,10 @@
 	{{> EasySearch.Input index=playersIndex attributes=InputAttributes}}
   <ul>
     {{#EasySearch.Each index=playersIndex}}
-      <li>Name of the player: {{name}} ({{score}})</li>
+      <li>{{name}} {{team}}</li>
     {{/EasySearch.Each}}
   </ul>
 
-  {{> EasySearch.LoadMore index=playersIndex}}
 
   {{#EasySearch.IfNoResults index=playersIndex}}
     <div class="no-results">No results found!</div>
@@ -51,18 +50,23 @@
   <div class="row">
       <div class="col s12 m5">
         <div class="card-panel teal">
-          <span class="white-text">
+          <div class = "left-align">
             <img src="{{ gameLog.player.headshots.original }}" />
-            <p> Minutes: {{ gameLog.minutes }} </p>
-            <p> Points: {{ gameLog.points }} </p>
-            <p> Assists: {{ gameLog.assists }} </p>
-            <p> Rebounds: {{ gameLog.rebounds_total }} </p>
-            <p> Steals: {{ gameLog.steals }} </p>
-            <p> Blocks: {{ gameLog.blocked_shots }} </p>
-            <p> Plus Minus: {{ gameLog.plus_minus }} </p>
-            <small>Updated: {{ gameLog.updated_at }}</small>
-          </span>
+          </div>
+          <div class = "right-align">
+            <span class="white-text right-align">
+              <p> Minutes: {{ gameLog.minutes }} </p>
+              <p> Points: {{ gameLog.points }} </p>
+              <p> Assists: {{ gameLog.assists }} </p>
+              <p> Rebounds: {{ gameLog.rebounds_total }} </p>
+              <p> Steals: {{ gameLog.steals }} </p>
+              <p> Blocks: {{ gameLog.blocked_shots }} </p>
+              <p> Plus Minus: {{ gameLog.plus_minus }} </p>
+              <small>Updated: {{ gameLog.updated_at }}</small>
+            </span>
+          </div>
         </div>
       </div>
     </div>
 </template>
+
