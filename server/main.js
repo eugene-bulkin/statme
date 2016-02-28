@@ -75,13 +75,10 @@ Meteor.methods ({
     }
   },
   'getPlayersList' : function () {
-    var url = BASE_URL + "/nba/players";
-    this.unblock();
     try {
-      var players_list = HTTP.call("GET", url).data;
-      for (var p in players_list){
-        fullName = players_list[p].full_name;
-        playerId = players_list[p].id;
+      for (var p in playerToGame){
+        fullName = playerToGame[p].fullName;
+        playerId = playerToGame[p].gameId;
         Players.insert({full_name: fullName, player_id: playerId});
       }
     } catch (e) {
@@ -93,7 +90,6 @@ Meteor.methods ({
 
 Meteor.startup(function () {
     var schedule = JSON.parse(Assets.getText('data/schedule.json'));
-    Meteor.call("getPlayersList");
     //var today = moment().format('YYYY-MM-DD');
     var today = "2016-02-27";
     var todayGames = schedule.current_season.filter(function(day) {
@@ -118,7 +114,11 @@ Meteor.startup(function () {
         });
       }
     });
+    
+    console.log("loaded thingies");
 
+    Meteor.call("getPlayersList");
+    
     timer = Meteor.setInterval(function() {
       Meteor.call("update");
     }, 1000);

@@ -1,20 +1,5 @@
 
-Players = new Mongo.Collection('players'),
-  PlayersIndex = new EasySearch.Index({
-    collection: Players,
-    fields: ['full_name'],
-    engine: new EasySearch.Minimongo(),
-    sort: function() {
-    return {'score': -1};
-    },
-    defaultSearchOptions: {
-    limit: 5
-  },
-  selector: function (searchObject, options, aggregation) {
-      let selector = this.defaultConfiguration().selector(searchObject, options, aggregation)
-      return selector;
-      }
-  });
+Players = new Mongo.Collection('players')
 
 
 
