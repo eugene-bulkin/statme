@@ -1,16 +1,12 @@
-Watched = new Mongo.Collection("watched");
+Players = new Mongo.Collection("players");
 
-WatchedSchema = new SimpleSchema({
-  name: {
-    type: String,
-    label: "name"
-  },
-  isGame: {
-    type: Boolean
-  },
-  isPlayer: {
-    type: Boolean
-  }
+PlayersSchema = new SimpleSchema({
+	full_name: {
+		type: String
+	},
+	player_id: {
+		type: Number
+	}
 });
 
-Watched.attachSchema(WatchedSchema);
+Players.attachSchema(PlayersSchema);

@@ -12,6 +12,9 @@ var clientWatch = function(data, socket) {
   }];
 }
 
+Meteor.publish("players", function(){
+  return Players.find({});
+});
 
 Meteor.methods ({
   'update': function() {
@@ -41,11 +44,27 @@ Meteor.methods ({
       console.log(e);
       return null;
     }
+  },
+  'getPlayersList' : function () {
+    var url = BASE_URL + "/nba/players";
+    this.unblock();
+    try {
+      var players_list = HTTP.call("GET", url).data;
+      for (var p in players_list){
+        fullName = players_list[p].full_name;
+        playerId = players_list[p].id;
+        Players.insert({full_name: fullName, player_id: playerId});
+      }
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 });
 
 Meteor.startup(function () {
     var schedule = JSON.parse(Assets.getText('data/schedule.json'));
+    Meteor.call("getPlayersList");
     var today = moment().format('YYYY-MM-DD');
     var todayGames = schedule.current_season.filter(function(day) {
       return day.id == today;
