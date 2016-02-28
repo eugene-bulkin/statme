@@ -11,7 +11,6 @@ var playerToGame = {};
 var gameTimes = {};
 
 var clientWatch = function(data, socket) {
-  console.log(playerToGame[data.player]);
   if(playerToGame[data.player]) {
     var gameId = playerToGame[data.player].gameId;
     if(!watchedGames[gameId]) {
