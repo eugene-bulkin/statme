@@ -76,6 +76,7 @@ Meteor.methods ({
   },
   'getPlayersList' : function () {
     try {
+      Players.remove({}); // don't forget to clear collection!
       for (var p in playerToGame){
         fullName = playerToGame[p].fullName;
         playerId = playerToGame[p].gameId;
@@ -114,11 +115,11 @@ Meteor.startup(function () {
         });
       }
     });
-    
+
     console.log("loaded thingies");
 
     Meteor.call("getPlayersList");
-    
+
     timer = Meteor.setInterval(function() {
       Meteor.call("update");
     }, 1000);
