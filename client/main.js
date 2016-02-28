@@ -14,6 +14,24 @@ Session.setDefault("watched", [{ player_id: 24498 }]);
 Meteor.subscribe("players");
 
 
+Template.search_bar_results.events ({
+ 	"change .player-select": function (event) {
+ 	  console.log("selected something");
+      watched = session.get("watched");
+      watched.push({player_id: this.player_id});
+      Session.set("watched", watched);
+    }
+    
+    });
+    
+Template.search_bar_results.helpers ({
+    list_of_players: function(){
+    	return Players.find({});
+  	}
+  });
+
+
+
 Template.stats.helpers ({
   gameLog: function() {
     dataDep.depend();

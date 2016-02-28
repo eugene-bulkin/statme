@@ -25,13 +25,27 @@
     </div>
   </div>
   <h1>Welcome to Statme!</h1>
+  	{{ > search_bar_results }}
     {{#each watched}}
       {{ > stats }}
     {{/each}}
-
+    
+    
 
 </body>
 
+<template name = "search_bar_results">
+	<div style="height:600px; width:200px; overflow-y:scroll;">
+	<ul id="search_results">
+		{{#each list_of_players}}
+			<li> 
+			<input type="checkbox" class="player-select"> 
+			<label> {{full_name}} </label> 	
+			 </li>
+		{{/each}}
+		</ul>
+	</div>
+</template>
 
 <template name = "stats">
   <div class="row">
