@@ -11,16 +11,30 @@ var playerToGame = {};
 var gameTimes = {};
 
 var clientWatch = function(data, socket) {
-  if(playerToGame[data.player]) {
-    var gameId = playerToGame[data.player].gameId;
-    if(!watchedGames[gameId]) {
-      watchedGames[gameId] = [];
-    }
-    watchedGames[gameId].push({
-      socket: socket,
-      watching: data
-    });
+  if(!playerToGame[data.player_id]) {
+    return;
   }
+  var gameId = playerToGame[data.player_id].gameId;
+  if(!watchedGames[gameId]) {
+    watchedGames[gameId] = [];
+  }
+  watchedGames[gameId].push({
+    socket: socket,
+    watching: data
+  });
+}
+
+var clientUnwatch = function(data, socket) {
+  if(!playerToGame[data.player_id]) {
+    return;
+  }
+  var gameId = playerToGame[data.player_id].gameId;
+  if(!watchedGames[gameId]) {
+    return;
+  }
+  watchedGames[gameId] = watchedGames[gameId].filter(function(w) {
+    return w.watching.player_id !== data.player_id;
+  });
 }
 
 function getAssetPath() {
@@ -132,5 +146,6 @@ Meteor.startup(function () {
     }, 250);
 
     Streamy.on("watch", clientWatch);
+    Streamy.on("unwatch", clientUnwatch);
 });
 
