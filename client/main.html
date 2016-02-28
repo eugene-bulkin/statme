@@ -4,8 +4,8 @@
 
 <body>
     <nav>
-      <div class="nav-wrapper">
-        <a href="#" class="brand-logo">Logo</a>
+      <div class="nav-wrapper light-blue darken-1 white-text">
+        <a href="#" class="brand-logo"> StatMe </a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
           <li>  {{ > loginButtons }} </li>
           <li><button data-target="modal1" class="btn modal-trigger">About</button></li>
@@ -25,7 +25,7 @@
       </div>
     </div>
   <div class="container">
-    <h1>Welcome to Statme!</h1>
+    
     {{#each watched}}
       {{ > stats }}
     {{/each}}
