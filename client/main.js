@@ -8,12 +8,14 @@ Meteor._debug = (function (super_meteor_debug) {
 
 var data;
 var dataDep = new Tracker.Dependency();
-Session.setDefault("watched", [{player_id: "c5101bd8-bb6b-4a9f-b949-6fc4f0a33c9e"}]);
+Session.setDefault("watched", [{player_id: "148"}]);
 
 Template.stats.helpers ({
   gameLog: function() {
     dataDep.depend();
-    if (data.player_id == this.player_id) {
+    // console.log(data.player.id);
+    // console.log(this.player_id);
+    if (data.player.id == this.player_id) {
       return data;
     }
   }
@@ -42,7 +44,7 @@ Accounts.ui.config({
 
 Streamy.onConnect(function() {
   Streamy.emit("watch", {
-    player: "c5101bd8-bb6b-4a9f-b949-6fc4f0a33c9e"
+    player: 148
   });
 });
 

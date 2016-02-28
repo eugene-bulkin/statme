@@ -38,13 +38,15 @@
       <div class="col s12 m5">
         <div class="card-panel teal">
           <span class="white-text">
-              <p> Player Name: {{ this.player_id }} </p>
-              <p> Points: {{ gameLog.points }} </p>
-              <p> Assists: {{ gameLog.assists }} </p>
-              <p> Rebounds: {{ gameLog.rebounds }} </p>
-              <p> Steals: {{ gameLog.steals }} </p>
-              <p> Blocks: {{ gameLog.blocks }} </p>
-              <p> Plus Minus: {{ gameLog.plus_minus }} </p>
+            <img src="{{ gameLog.player.headshots.original }}" />
+            <p> Minutes: {{ gameLog.minutes }} </p>
+            <p> Points: {{ gameLog.points }} </p>
+            <p> Assists: {{ gameLog.assists }} </p>
+            <p> Rebounds: {{ gameLog.rebounds_total }} </p>
+            <p> Steals: {{ gameLog.steals }} </p>
+            <p> Blocks: {{ gameLog.blocked_shots }} </p>
+            <p> Plus Minus: {{ gameLog.plus_minus }} </p>
+            <small>Updated: {{ gameLog.updated_at }}</small>
           </span>
         </div>
       </div>
