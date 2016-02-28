@@ -114,11 +114,11 @@ Meteor.startup(function () {
         });
       }
     });
-    
+
     console.log("loaded thingies");
 
     Meteor.call("getPlayersList");
-    
+
     timer = Meteor.setInterval(function() {
       Meteor.call("update");
     }, 1000);

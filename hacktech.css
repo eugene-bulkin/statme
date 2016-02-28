@@ -1,1 +1,24 @@
 /* CSS declarations go here */
+.stats-card h3 {
+  margin: 0;
+}
+
+.stats-card .team {
+  width: 100%;
+}
+
+.stats-card .row {
+  margin-bottom: 0;
+}
+
+.stats-table th {
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  font-size: larger;
+  margin: 0.15em 0;
+}
+
+.stats-table td {
+  text-align: center;
+}

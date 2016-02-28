@@ -23,6 +23,20 @@ Template.stats.helpers ({
     if (data.player.id == this.player_id) {
       return data;
     }
+  },
+  logo: function(player) {
+    return player.teams[0].logos.small;
+  },
+  pcts: function() {
+    dataDep.depend();
+    if(!data) {
+      return null;
+    }
+    return {
+      field_goals: (100 * (data.field_goals_made / data.field_goals_attempted)) | 0,
+      three_point_field_goals: (100 * (data.three_point_field_goals_made / data.three_point_field_goals_attempted)) | 0,
+      free_throws: (100 * (data.free_throws_made / data.free_throws_attempted)) | 0,
+    };
   }
 });
 
