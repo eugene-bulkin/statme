@@ -57,10 +57,11 @@ Template.stats.helpers ({
     if(!data) {
       return null;
     }
+    var pdata = data[this.player_id];
     return {
-      field_goals: (100 * (data.field_goals_made / data.field_goals_attempted)) | 0,
-      three_point_field_goals: (100 * (data.three_point_field_goals_made / data.three_point_field_goals_attempted)) | 0,
-      free_throws: (100 * (data.free_throws_made / data.free_throws_attempted)) | 0,
+      field_goals: (100 * (pdata.field_goals_made / pdata.field_goals_attempted)) | 0,
+      three_point_field_goals: (100 * (pdata.three_point_field_goals_made / pdata.three_point_field_goals_attempted)) | 0,
+      free_throws: (100 * (pdata.free_throws_made / pdata.free_throws_attempted)) | 0,
     };
   }
 });
