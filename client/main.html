@@ -12,10 +12,13 @@
 </body>
 
 <template name = "stats">
+  <img src="{{ gameLog.player.headshots.original }}" />
+  <p> Minutes: {{ gameLog.minutes }} </p>
   <p> Points: {{ gameLog.points }} </p>
   <p> Assists: {{ gameLog.assists }} </p>
-  <p> Rebounds: {{ gameLog.rebounds }} </p>
+  <p> Rebounds: {{ gameLog.rebounds_total }} </p>
   <p> Steals: {{ gameLog.steals }} </p>
-  <p> Blocks: {{ gameLog.blocks }} </p>
+  <p> Blocks: {{ gameLog.blocked_shots }} </p>
   <p> Plus Minus: {{ gameLog.plus_minus }} </p>
+  <small>Updated: {{ gameLog.updated_at }}</small>
 </template>

@@ -18,7 +18,7 @@ Template.stats.helpers ({
 
 Streamy.onConnect(function() {
   Streamy.emit("watch", {
-    player: "c5101bd8-bb6b-4a9f-b949-6fc4f0a33c9e"
+    player: 148
   });
 });
 
