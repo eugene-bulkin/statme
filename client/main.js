@@ -9,21 +9,27 @@ Meteor._debug = (function (super_meteor_debug) {
 var data;
 var dataDep = new Tracker.Dependency();
 
-Session.setDefault("watched", [{ player_id: 24498 }]);
+Session.setDefault("watched", []);
 
 Meteor.subscribe("players");
 
 
 Template.search_bar_results.events ({
  	"change .player-select": function (event) {
- 	  console.log("selected something");
-      watched = session.get("watched");
-      watched.push({player_id: this.player_id});
+
+      var toWatch = {player_id: this.player_id};
+      watched = Session.get("watched");
+      if(event.target.checked) {
+        watched.push(toWatch);
+        Streamy.emit("watch", toWatch);
+      } else {
+        watched = watched.filter(function(w) { return w.player_id !== toWatch.player_id });
+        Streamy.emit("unwatch", toWatch);
+      }
       Session.set("watched", watched);
     }
-    
-    });
-    
+});
+
 Template.search_bar_results.helpers ({
     list_of_players: function(){
     	return Players.find({});
@@ -63,8 +69,10 @@ Accounts.ui.config({
 });
 
 Streamy.onConnect(function() {
-  Streamy.emit("watch", {
-    player: Session.get("watched")[0].player_id
+  Session.get("watched").forEach(function(toWatch) {
+    Streamy.emit("watch", {
+      player: toWatch.player_id
+    });
   });
 });
 

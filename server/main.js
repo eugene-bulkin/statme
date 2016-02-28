@@ -78,9 +78,9 @@ Meteor.methods ({
     try {
       Players.remove({}); // don't forget to clear collection!
       for (var p in playerToGame){
-        fullName = playerToGame[p].fullName;
-        playerId = playerToGame[p].gameId;
-        Players.insert({full_name: fullName, player_id: playerId});
+        var fullName = playerToGame[p].fullName;
+        var gameId = playerToGame[p].gameId;
+        Players.insert({full_name: fullName, player_id: Number(p)});
       }
     } catch (e) {
       console.log(e);
@@ -116,9 +116,9 @@ Meteor.startup(function () {
       }
     });
 
-    console.log("loaded thingies");
-
     Meteor.call("getPlayersList");
+
+    console.log("Players loaded.");
 
     timer = Meteor.setInterval(function() {
       Meteor.call("update");

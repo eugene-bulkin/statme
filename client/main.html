@@ -29,8 +29,8 @@
     {{#each watched}}
       {{ > stats }}
     {{/each}}
-    
-    
+
+
 
 </body>
 
@@ -38,10 +38,10 @@
 	<div style="height:600px; width:200px; overflow-y:scroll;">
 	<ul id="search_results">
 		{{#each list_of_players}}
-			<li> 
-			<input type="checkbox" class="player-select"> 
-			<label> {{full_name}} </label> 	
-			 </li>
+			<li>
+  			<input type="checkbox" class="filled-in player-select" id="search-{{@index}}">
+  			<label for="search-{{@index}}">{{full_name}}</label>
+			</li>
 		{{/each}}
 		</ul>
 	</div>
