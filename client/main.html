@@ -11,7 +11,7 @@
         <li><button data-target="modal1" class="btn modal-trigger">About</button></li>
       </ul>
     </div>
-  </nav> 
+  </nav>
 
   <!-- Modal Structure -->
   <div id="modal1" class="modal">
@@ -29,16 +29,16 @@
     {{#each watched}}
       {{ > stats }}
     {{/each}}
-    
-    
+
+
 </body>
 <template name = "search">
 	{{> EasySearch.Input index=playersIndex attributes=InputAttributes}}
-  <ul>
+  <!-- <ul>
     {{#EasySearch.Each index=playersIndex}}
       <li>{{name}} {{team}}</li>
     {{/EasySearch.Each}}
-  </ul>
+  </ul> -->
 
 
   {{#EasySearch.IfNoResults index=playersIndex}}

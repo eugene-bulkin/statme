@@ -1,15 +1,40 @@
+var fs = Npm.require("fs");
+
 var BASE_URL = "http://api.thescore.com";
 
-var curTime = 1456620103;
-var gameId = "nba-2015-2016-min-no-2016-02-27-1800";
+var startTime = 1456628315;
+var curTime = startTime;
+var endTime = 1456636040;
 var timer;
 var watchedGames = {};
+var playerToGame = {};
+var gameTimes = {};
 
 var clientWatch = function(data, socket) {
-  watchedGames[gameId] = [{
-    socket: socket,
-    watching: data
-  }];
+  console.log(playerToGame[data.player]);
+  if(playerToGame[data.player]) {
+    var gameId = playerToGame[data.player].gameId;
+    if(!watchedGames[gameId]) {
+      watchedGames[gameId] = [];
+    }
+    watchedGames[gameId].push({
+      socket: socket,
+      watching: data
+    });
+  }
+}
+
+function getAssetPath() {
+    var meteor_root = Npm.require('fs').realpathSync(process.cwd() + '/../');
+
+    var application_root = Npm.require('fs').realpathSync(meteor_root + '/../');
+    // if running on dev mode
+    if (Npm.require('path').basename(Npm.require('fs').realpathSync(meteor_root + '/../../../')) == '.meteor') {
+        application_root = Npm.require('fs').realpathSync(meteor_root + '/../../../../');
+    }
+
+    var assets_folder = meteor_root + '/server/assets/app';
+    return assets_folder;
 }
 
 Meteor.publish("players", function(){
@@ -18,21 +43,26 @@ Meteor.publish("players", function(){
 
 Meteor.methods ({
   'update': function() {
-    var result = Meteor.call('getPlayerStats', "105567");
-    for(var k in watchedGames) {
-      watchedGames[k].forEach(function(watchData) {
-        var player = result.filter(function(playerLineScore) {
-          return playerLineScore.player.id === watchData.watching.player;
+    for(var gameId in watchedGames) {
+      var prevTimes = gameTimes[gameId].filter(function(time) {
+        return time < curTime;
+      });
+      if(prevTimes.length == 0) {
+        continue;
+      }
+      var mostRecent = JSON.parse(Assets.getText('data/' + gameId + '/' + prevTimes[prevTimes.length - 1] + '.json'));
+      watchedGames[gameId].forEach(function(watcher) {
+        var player = mostRecent.filter(function(playerLineScore) {
+          return playerLineScore.player.id === watcher.watching.player;
         })[0];
-        // console.log(player.updated_at);
-        // console.log(player);
         if(player) {
-          Streamy.emit("stats", player, watchData.socket);
+          Streamy.emit("stats", player, watcher.socket);
         }
       });
     }
   },
   'getPlayerStats' : function (gameId) {
+    return;
     var url = BASE_URL + "/nba/events/" + gameId;
     this.unblock();
     try {
@@ -65,14 +95,41 @@ Meteor.methods ({
 Meteor.startup(function () {
     var schedule = JSON.parse(Assets.getText('data/schedule.json'));
     Meteor.call("getPlayersList");
-    var today = moment().format('YYYY-MM-DD');
+    //var today = moment().format('YYYY-MM-DD');
+    var today = "2016-02-27";
     var todayGames = schedule.current_season.filter(function(day) {
       return day.id == today;
     })[0].event_ids;
 
+    todayGames.forEach(function(gameId) {
+      var path = getAssetPath() + "/data/" + gameId;
+      if(Npm.require('fs').existsSync(path, fs.F_OK)) {
+        var files = Npm.require('fs').readdirSync(path);
+        gameTimes[gameId] = files.filter(function(file) {
+          return file.indexOf(".json") > -1;
+        }).map(function(file) {
+          return parseInt(file.replace(/\.json$/,''), 10);
+        });
+        var players = JSON.parse(Assets.getText('data/' + gameId + '/' + files[files.length - 1]));
+        players.forEach(function(player) {
+          playerToGame[player.player.id] = {
+            gameId: gameId,
+            fullName: player.player.full_name
+          };
+        });
+      }
+    });
+
     timer = Meteor.setInterval(function() {
       Meteor.call("update");
-    }, 2500);
+    }, 1000);
+
+    tickTimer = Meteor.setInterval(function() {
+      curTime += 1;
+      if(curTime > endTime) {
+        curTime = endTime;
+      }
+    }, 250);
 
     Streamy.on("watch", clientWatch);
 });

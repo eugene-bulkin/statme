@@ -8,7 +8,8 @@ Meteor._debug = (function (super_meteor_debug) {
 
 var data;
 var dataDep = new Tracker.Dependency();
-Session.setDefault("watched", [{player_id: 148}]);
+
+Session.setDefault("watched", [{ player_id: 24498 }]);
 
 Meteor.subscribe("players");
 
@@ -16,15 +17,15 @@ Template.search.helpers({
   inputAttributes: function () {
       return { 'class': 'easy-search-input', 'placeholder': 'search for player' };
     },
-   playersIndex: () => PlayersIndex
+   playersIndex: function() { return PlayersIndex; }
 });
-
 
 Template.stats.helpers ({
   gameLog: function() {
     dataDep.depend();
-    //console.log(data);
-    // console.log(this.player_id);
+    if(!data) {
+      return null;
+    }
     if (data.player.id == this.player_id) {
       return data;
     }
@@ -39,29 +40,15 @@ $(document).ready(function(){
 Template.body.helpers ({
   watched: function() {
     return Session.get("watched");
-  }, 
+  },
   playersList: function() {
-    return Players.find({});
+    return [];
   }
 });
 
-
-  Template.player.helpers({
-    selected: function () {
-      return Session.equals("selectedPlayer", this.__originalId) ? "selected" : '';
-    }
-  });
-
-  Template.player.events({
-    'click': function () {
-      Session.set("selectedPlayer", this.__originalId);
-    }
-  });
-
-Tracker.autorun(function () {
-  let cursor = PlayersIndex.search("").fetch();
-  console.log(cursor);
-  });
+/*Tracker.autorun(function () {
+  var cursor = PlayersIndex.search("a").fetch();
+});*/
 
 Template.body.events ({
   'submit .search' : function(event) {
@@ -71,9 +58,9 @@ Template.body.events ({
       watch_array.push({player_id: playerID});
       Session.set("watched", watch_array);
       Streamy.emit("watch", {
-      player: playerID
+        player: playerID
       });
-  } 
+  }
 });
 
 Accounts.ui.config({
@@ -87,13 +74,12 @@ Accounts.ui.config({
 
 
 Streamy.onConnect(function() {
-    Streamy.emit("watch", {
-      player: Session.get("watched")[0].player_id
-    });
+  Streamy.emit("watch", {
+    player: Session.get("watched")[0].player_id
+  });
 });
 
 Streamy.on("stats", function(d) {
-  console.log(d);
   data = d;
   dataDep.changed();
 });
